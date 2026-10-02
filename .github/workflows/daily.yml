@@ -1,0 +1,24 @@
+name: Daily Run
+on:
+  schedule:
+    # 每天 UTC 1:00（北京时间 9:00）
+    - cron: '0 1 * * *'
+  workflow_dispatch:  # 也支持手动触发
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -r requirements.txt
+      - run: python run_all.py
+      - name: 提交生成的 dashboard
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add output/
+          git commit -m "update dashboard" || echo "no changes"
+          git push

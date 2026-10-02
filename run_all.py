@@ -29,7 +29,9 @@ def main():
     out = os.path.join(BASE, "output", "dashboard.html")
     print(f"\n===== 全部完成 =====")
     print(f"打开：{out}")
-    webbrowser.open("file:///" + out.replace("\\", "/"))
+    # 本地运行时自动打开浏览器；CI 环境下跳过
+    if os.environ.get("CI") is None:
+        webbrowser.open("file:///" + out.replace("\\", "/"))
 
 if __name__ == "__main__":
     main()
