@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>BNB vs BTC 止盈实验 · 对比</title>
+  <!-- Font Awesome 6 (免费图标库) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #dce8d5;
+      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 1.2rem 0.8rem;
+      color: #1a2a3a;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1000px;
+      width: 100%;
+      background: rgba(255,255,255,0.78);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border-radius: 36px;
+      padding: 1.8rem 1.4rem;
+      box-shadow: 0 25px 50px -12px rgba(60, 90, 70, 0.16), 0 8px 24px -6px rgba(0,0,0,0.04);
+      border: 1px solid rgba(200, 220, 190, 0.5);
+      transition: all 0.2s ease;
+    }
+
+    h1 {
+      font-size: 2.1rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem 0.8rem;
+      border-bottom: 4px solid #2e7d5e;
+      padding-bottom: 0.6rem;
+      margin-bottom: 1.8rem;
+      color: #1f3a2b;
+    }
+
+    h1 i {
+      color: #2e7d5e;
+      font-size: 2rem;
+    }
+
+    .badge-header {
+      font-size: 0.85rem;
+      margin-left: auto;
+      background: rgba(70, 130, 100, 0.15);
+      padding: 0.2rem 1rem;
+      border-radius: 60px;
+      font-weight: 400;
+      color: #1f4d3a;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      white-space: nowrap;
+      border: 1px solid rgba(100, 150, 120, 0.2);
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 500;
+      margin-top: 2rem;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: #1f3a2b;
+      border-left: 6px solid #2e7d5e;
+      padding-left: 1rem;
+      background: linear-gradient(to right, rgba(46, 125, 94, 0.06), transparent);
+      border-radius: 0 14px 14px 0;
+    }
+
+    h2 i {
+      color: #2e7d5e;
+      font-size: 1.4rem;
+      width: 2rem;
+      text-align: center;
+    }
+
+    h3 {
+      font-size: 1.12rem;
+      font-weight: 500;
+      margin-top: 1.5rem;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #1f3a2b;
+    }
+
+    h3 i {
+      color: #2e7d5e;
+      font-size: 1.2rem;
+      width: 1.8rem;
+    }
+
+    p {
+      line-height: 1.7;
+      margin: 0.4rem 0;
+    }
+
+    p i {
+      color: #2e7d5e;
+      margin-right: 0.3rem;
+    }
+
+    .highlight-box {
+      background: rgba(46, 125, 94, 0.06);
+      border-radius: 20px;
+      padding: 0.9rem 1.2rem;
+      margin: 1rem 0;
+      border-left: 6px solid #2e7d5e;
+      backdrop-filter: blur(2px);
+      line-height: 1.7;
+    }
+
+    .highlight-box i {
+      color: #2e7d5e;
+      margin-right: 0.4rem;
+    }
+
+    .highlight-box.green-params {
+      background: rgba(46, 125, 94, 0.08);
+      border-left-color: #2e7d5e;
+    }
+
+    .inline-code {
+      background: #eaf0e6;
+      padding: 0.1rem 0.7rem;
+      border-radius: 30px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: #1f4d3a;
+      border: 1px solid #c6dac6;
+      white-space: nowrap;
+    }
+
+    /* 表格 */
+    .tbl-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin: 0.6rem 0 1rem 0;
+      border-radius: 16px;
+      border: 1px solid rgba(200, 220, 190, 0.6);
+      background: rgba(255,255,255,0.6);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      min-width: 520px;
+    }
+
+    th, td {
+      padding: 0.6rem 0.7rem;
+      text-align: right;
+      border-bottom: 1px solid rgba(200, 220, 190, 0.5);
+      white-space: nowrap;
+    }
+
+    th:first-child, td:first-child {
+      text-align: left;
+    }
+
+    th {
+      color: #1f4d3a;
+      font-weight: 600;
+      font-size: 0.78rem;
+      background: rgba(46, 125, 94, 0.08);
+      position: sticky;
+      top: 0;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .bnb-col { color: #b8860b; font-weight: 600; }
+    .btc-col { color: #c2410c; font-weight: 600; }
+    .pos { color: #2e7d5e; font-weight: 600; }
+    .neg { color: #b91c1c; font-weight: 600; }
+    .muted { color: #6b7f6b; }
+
+    /* 进度条 */
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin: 0.5rem 0;
+      font-size: 0.85rem;
+    }
+
+    .bar-row .name {
+      width: 44px;
+      color: #1f4d3a;
+      font-weight: 600;
+      flex: none;
+    }
+
+    .bar-track {
+      flex: 1;
+      height: 16px;
+      background: #eaf0e6;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #c6dac6;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 10px;
+      transition: width 0.6s ease;
+    }
+
+    .bar-fill.bnb {
+      background: linear-gradient(90deg, #2e7d5e, #6fbf8f);
+    }
+
+    .bar-fill.btc {
+      background: linear-gradient(90deg, #c2410c, #f59e0b);
+    }
+
+    .bar-row .val {
+      width: 80px;
+      text-align: right;
+      flex: none;
+      font-variant-numeric: tabular-nums;
+      font-weight: 600;
+      color: #1f3a2b;
+    }
+
+    /* 核心指标卡片 */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+      margin: 0.8rem 0;
+    }
+
+    .kpi {
+      background: rgba(255,255,255,0.85);
+      border: 1px solid rgba(200, 220, 190, 0.6);
+      border-radius: 18px;
+      padding: 0.9rem;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(60, 90, 70, 0.04);
+    }
+
+    .kpi .label {
+      font-size: 0.75rem;
+      color: #4a6b5a;
+      margin-bottom: 0.4rem;
+    }
+
+    .kpi .val {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .kpi .val.bnb { color: #b8860b; }
+    .kpi .val.btc { color: #c2410c; }
+    .kpi .win {
+      font-size: 0.7rem;
+      margin-top: 0.3rem;
+      color: #4a6b5a;
+    }
+
+    /* 逐年卡片 */
+    .year {
+      background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(200, 220, 190, 0.6);
+      border-radius: 20px;
+      padding: 1rem 1.1rem;
+      margin-bottom: 0.9rem;
+      box-shadow: 0 2px 8px rgba(60, 90, 70, 0.04);
+    }
+
+    .year h3 {
+      margin: 0 0 0.8rem 0;
+      font-size: 1.05rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: none;
+      padding-left: 0;
+      background: none;
+    }
+
+    .year h3 .tag {
+      font-size: 0.7rem;
+      padding: 0.15rem 0.8rem;
+      border-radius: 40px;
+      background: rgba(46, 125, 94, 0.12);
+      color: #1f4d3a;
+      border: 1px solid rgba(46, 125, 94, 0.25);
+      font-weight: 500;
+    }
+
+    .duo {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.7rem;
+    }
+
+    .box {
+      background: rgba(255,255,255,0.85);
+      border: 1px solid rgba(200, 220, 190, 0.6);
+      border-radius: 16px;
+      padding: 0.7rem 0.9rem;
+    }
+
+    .box h4 {
+      margin: 0 0 0.5rem 0;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .box h4.bnb { color: #b8860b; }
+    .box h4.btc { color: #c2410c; }
+
+    .box .row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.25rem 0;
+      font-size: 0.82rem;
+      border-bottom: 1px dashed rgba(200, 220, 190, 0.6);
+    }
+
+    .box .row:last-child { border-bottom: none; }
+    .box .row .k { color: #4a6b5a; }
+    .box .row .v { font-weight: 600; color: #1f3a2b; font-variant-numeric: tabular-nums; }
+
+    .note {
+      margin-top: 0.7rem;
+      font-size: 0.8rem;
+      color: #3d6b4c;
+      background: rgba(46, 125, 94, 0.06);
+      padding: 0.6rem 0.8rem;
+      border-radius: 12px;
+      line-height: 1.6;
+      border-left: 4px solid #2e7d5e;
+    }
+
+    .note i {
+      color: #2e7d5e;
+      margin-right: 0.3rem;
+    }
+
+    hr {
+      margin: 1.8rem 0 1rem 0;
+      border: none;
+      height: 2px;
+      background: linear-gradient(90deg, #b6d4b6, transparent);
+    }
+
+    .footer-note {
+      margin-top: 2rem;
+      text-align: right;
+      font-size: 0.85rem;
+      color: #3d6b4c;
+      border-top: 1px solid #c6dac6;
+      padding-top: 1.2rem;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-note i {
+      color: #2e7d5e;
+    }
+
+    /* 小屏优化 */
+    @media (max-width: 680px) {
+      body { padding: 0.8rem 0.4rem; }
+      .container { padding: 1.2rem 0.9rem; border-radius: 28px; }
+      h1 { font-size: 1.7rem; gap: 0.3rem; }
+      h1 i { font-size: 1.6rem; }
+      .badge-header { font-size: 0.75rem; padding: 0.1rem 0.8rem; margin-left: 0; width: 100%; justify-content: center; }
+      h2 { font-size: 1.3rem; padding-left: 0.8rem; }
+      h2 i { font-size: 1.2rem; width: 1.6rem; }
+      h3 { font-size: 1rem; }
+      table { font-size: 0.78rem; }
+      .kpi .val { font-size: 1.1rem; }
+      .duo { grid-template-columns: 1fr; }
+      .bar-row .val { width: 66px; }
+      .bar-row .name { width: 38px; }
+      .footer-note { font-size: 0.75rem; justify-content: center; }
+    }
+
+    @media (max-width: 420px) {
+      .container { padding: 0.9rem 0.7rem; }
+      h1 { font-size: 1.4rem; }
+      table { font-size: 0.72rem; }
+      th, td { padding: 0.45rem 0.4rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- 标题 -->
+  <h1>
+    <i class="fas fa-coins"></i>
+    BNB vs BTC 止盈实验
+    <span class="badge-header"><i class="far fa-calendar-alt"></i> 2026-10-03</span>
+  </h1>
+
+  <!-- 一句话结论 -->
+  <div class="highlight-box green-params">
+    <i class="fas fa-flag-checkered"></i>
+    <strong>一句话结论：</strong><br>
+    🟡 <strong>BNB</strong> 历史已止盈收益率和浮盈明显强于 🟠 <strong>BTC</strong>；<br>
+    🟠 BTC 胜在稳定，达成度略高且每年都能达标。<br>
+    📌 当前 2026 组，🟡 <strong>BNB 也更接近止盈目标</strong>。
+  </div>
+
+  <!-- 核心指标 -->
+  <h2><i class="fas fa-chart-line"></i> 核心指标总览</h2>
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="label">平均收益率</div>
+      <div class="val bnb">+74.43%</div>
+      <div class="win">🟡 BNB 胜</div>
+    </div>
+    <div class="kpi">
+      <div class="label">平均收益率</div>
+      <div class="val btc">+28.60%</div>
+      <div class="win">🟠 BTC</div>
+    </div>
+    <div class="kpi">
+      <div class="label">平均浮盈</div>
+      <div class="val bnb">+70,461</div>
+      <div class="win">🟡 BNB 胜</div>
+    </div>
+    <div class="kpi">
+      <div class="label">平均浮盈</div>
+      <div class="val btc">+57,470</div>
+      <div class="win">🟠 BTC</div>
+    </div>
+    <div class="kpi">
+      <div class="label">平均达成度</div>
+      <div class="val bnb">111.2%</div>
+      <div class="win">🟠 BTC 略胜</div>
+    </div>
+    <div class="kpi">
+      <div class="label">平均达成度</div>
+      <div class="val btc">112.6%</div>
+      <div class="win">🟠 BTC 略胜</div>
+    </div>
+  </div>
+
+  <!-- 已止盈组平均指标 -->
+  <h2><i class="fas fa-trophy"></i> 已止盈组平均指标</h2>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>指标</th>
+          <th class="bnb-col">🟡 BNB</th>
+          <th class="btc-col">🟠 BTC</th>
+          <th>胜出</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>已止盈组数</td><td>4 组</td><td>5 组</td><td class="btc-col">BTC</td></tr>
+        <tr><td>平均投入天数</td><td>315.0 天</td><td>345.6 天</td><td class="bnb-col">BNB</td></tr>
+        <tr><td>平均累计投入</td><td>144,900</td><td>200,480</td><td class="bnb-col">BNB</td></tr>
+        <tr><td>平均浮盈</td><td class="pos">+70,461</td><td class="pos">+57,470</td><td class="bnb-col">BNB</td></tr>
+        <tr><td>平均收益率</td><td class="pos">+74.43%</td><td class="pos">+28.60%</td><td class="bnb-col">BNB</td></tr>
+        <tr><td>平均达成度</td><td>111.2%</td><td>112.6%</td><td class="btc-col">BTC</td></tr>
+        <tr><td>最高收益率组</td><td>2021 组 +180.86%</td><td>2022 组 +35.46%</td><td class="bnb-col">BNB</td></tr>
+        <tr><td>最高达成度组</td><td>2021 组 120.7%</td><td>2021 组 128.5%</td><td class="btc-col">BTC</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 平均指标可视化 -->
+  <div style="margin-top:1rem;">
+    <div class="bar-row">
+      <span class="name">BNB</span>
+      <div class="bar-track"><div class="bar-fill bnb" style="width:74.43%"></div></div>
+      <span class="val">+74.43%</span>
+    </div>
+    <div class="bar-row">
+      <span class="name">BTC</span>
+      <div class="bar-track"><div class="bar-fill btc" style="width:28.60%"></div></div>
+      <span class="val">+28.60%</span>
+    </div>
+
+    <div style="height:8px"></div>
+
+    <div class="bar-row">
+      <span class="name">BNB</span>
+      <div class="bar-track"><div class="bar-fill bnb" style="width:100%"></div></div>
+      <span class="val">111.2%</span>
+    </div>
+    <div class="bar-row">
+      <span class="name">BTC</span>
+      <div class="bar-track"><div class="bar-fill btc" style="width:100%"></div></div>
+      <span class="val">112.6%</span>
+    </div>
+
+    <div style="height:8px"></div>
+
+    <div class="bar-row">
+      <span class="name">BNB</span>
+      <div class="bar-track"><div class="bar-fill bnb" style="width:100%"></div></div>
+      <span class="val">+70,461</span>
+    </div>
+    <div class="bar-row">
+      <span class="name">BTC</span>
+      <div class="bar-track"><div class="bar-fill btc" style="width:81.5%"></div></div>
+      <span class="val">+57,470</span>
+    </div>
+    <p style="font-size:0.78rem;color:#4a6b5a;margin-top:0.5rem;">
+      <i class="fas fa-info-circle"></i> 依次为：平均收益率 / 平均达成度 / 平均浮盈（每 1000 USDT 比例）
+    </p>
+  </div>
+
+  <!-- BNB 明细 -->
+  <h2><i class="fas fa-coins"></i> 🟡 BNB 明细</h2>
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>组别</th><th>状态</th><th>投入天数</th><th>累计投入</th>
+          <th>浮盈</th><th>收益率</th><th>达成度</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>2020</td><td>✅</td><td>214</td><td>149,800</td><td class="pos">+48,369</td><td class="pos">+32.29%</td><td>112.5%</td></tr>
+        <tr><td>2021</td><td>✅</td><td>41</td><td>28,700</td><td class="pos">+51,907</td><td class="pos">+180.86%</td><td>120.7%</td></tr>
+        <tr><td>2022</td><td>✅</td><td>797</td><td>255,500</td><td class="pos">+135,917</td><td class="pos">+53.20%</td><td>105.4%</td></tr>
+        <tr><td>2024</td><td class="muted">⚪</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td></tr>
+        <tr><td>2025</td><td>✅</td><td>208</td><td>145,600</td><td class="pos">+45,649</td><td class="pos">+31.35%</td><td>106.2%</td></tr>
+        <tr><td>2026</td><td>🟡</td><td>265</td><td>185,500</td><td class="pos">+39,237</td><td class="pos">+21.15%</td><td>91.2%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- BTC 明细 -->
+  <h2><i class="fas fa-coins"></i> 🟠 BTC 明细</h2>
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>组别</th><th>状态</th><th>投入天数</th><th>累计投入</th>
+          <th>浮盈</th><th>收益率</th><th>达成度</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>2020</td><td>✅</td><td>209</td><td>146,300</td><td class="pos">+48,735</td><td class="pos">+33.31%</td><td>113.3%</td></tr>
+        <tr><td>2021</td><td>✅</td><td>278</td><td>194,600</td><td class="pos">+55,249</td><td class="pos">+28.39%</td><td>128.5%</td></tr>
+        <tr><td>2022</td><td>✅</td><td>661</td><td>255,500</td><td class="pos">+90,588</td><td class="pos">+35.46%</td><td>105.3%</td></tr>
+        <tr><td>2024</td><td>✅</td><td>302</td><td>211,400</td><td class="pos">+47,028</td><td class="pos">+22.25%</td><td>109.4%</td></tr>
+        <tr><td>2025</td><td>✅</td><td>278</td><td>194,600</td><td class="pos">+45,751</td><td class="pos">+23.51%</td><td>106.4%</td></tr>
+        <tr><td>2026</td><td>🟡</td><td>275</td><td>192,500</td><td class="pos">+33,012</td><td class="pos">+17.15%</td><td>76.8%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 逐年对比 -->
+  <h2><i class="fas fa-balance-scale"></i> 逐年组对比</h2>
+
+  <div class="year">
+    <h3>2020 组 <span class="tag">几乎持平</span></h3>
+    <div class="duo">
+      <div class="box">
+        <h4 class="bnb"><i class="fas fa-coins"></i> 🟡 BNB</h4>
+        <div class="row"><span class="k">收益率</span><span class="v">+32.29%</span></div>
+        <div class="row"><span class="k">达成度</span><span class="v">112.5%</span></div>
+        <div class="row"><span class="k">浮盈</span><span class="v">+48,369</span></div>
+      </div>
+      <div class="box">
+        <h4 class="btc"><i class="fas fa-bitcoin-sign"></i> 🟠 BTC</h4>
+        <div class="row"><span class="k">收益率</span><span class="v">+33.31%</span></div>
+        <div class="row"><span class="k">达成度</span><span class="v">113.3%</span></div>
+        <div class="row"><span class="k">浮盈</span><span class="v">+48,735</span></div>
+      </div>
+    </div>
+    <div class="note"><i class="fas fa-equals"></i> 两者非常接近，BTC 收益率和达成度略高一点点。</div>
+  </div>
+
+  <div class="year">
+    <h3>2021 组 <span class="tag">BNB 大胜</span></h3>
+    <div class="duo">
+      <div class="box">
+        <h4 class="bnb"><i class="fas fa-coins"></i> 🟡 BNB</h4>
+        <div class="row"><span class="k">收益率</span><span class="v">+180.86%</span></div>
+        <div class="row"><span class="k">达成度</span><span class="v">120.7%</span></div>
+        <div class="row"><span class="k">投入天数</span><span class="v">41 天</span></div>
+      </div>
+      <div class="box">
+        <h4 class="btc"><i class="fas fa-bitcoin-sign"></i> 🟠 BTC</h4>
+        <div class="row"><span class="k">收益率</span><span class="v">+28.39%</span></div>
+        <div class="row"><span class="k">达成度</span><span class="v">128.5%</span></div>
+        <div class="row"><span class="k">投入天数</span><span class="v">278 天</span></div>
+      </div>
+    </div>
+    <div class="note"><i class="fas fa-rocket"></i> BNB 用 41 天、2.87 万投入，收益率 +180.86%，效率极高；BTC 达成度略高。</div>
+  </div>
+
+  <div class="year">
+    <h3>2022 组 <span class="tag">BNB 浮盈更高</span></h3>
+    <div class="duo">
+      <div class="box">
+        <h4 class="bnb"><i class="fas fa-coins"></i> 🟡 BNB</h4>
+        <div class="row"><span class="k">收益率</span><span class="v">+53.20%</span></div>
+        <div class="row"><span class="k">浮盈</span><span class="v">+135,917</span></div>
+        <div class="row"><span class="k">达成度</span><span class="v">105.4%</span></div>
+      </div>
+      <div class="box">
+        <h4 class="btc"><i class="fas fa-bitcoin-sign"></i> 🟠 BTC</h4>
+        <div class="row"><span class="k">收益率</span><span class="v">+35.46%</span></div>
+        <div class="row"><span class="k">浮盈</span><span class="v">+90,588</span></div>
+        <div class="row"><span class="k">达成度</span><span class="v">105.3%</span></div>
+      </div>
+    </div>
+    <div class="note"><i class="fas fa-money-bill-trend-up"></i> 同样投入 25.55 万，BNB 浮盈 +13.59 万，BTC +9.06 万；达成度几乎相同。</div>
+  </div>
+
+  <div class="year">
+    <h3>2024 组 <span class="tag">BNB 无数据</span></h3>
+    <div class="duo">
+      <div class="box">
+        <h4 class="bnb"><i class="fas fa-coins"></i> 🟡 BNB</h4>
+        <div class="row"><span class="k">状态</span><span class="v">⚪ 无数据</span></div>
+      </div>
+      <div class="box">
+        <h4 class="btc"><i class="fas fa-bitcoin-sign"></i> 🟠 BTC</h4>
+        <div class="row"><span class="k">收益率</span><span class="v">+22.25%</span></div>
+        <div class="row"><span class="k">达成度</span><span class="v">109.4%</span></div>
+      </div>
+    </div>
+    <div class="note"><i class="fas fa-triangle-exclamation"></i> BNB 无 2024 组数据；BTC 单独完成止盈，达成度 109.4%。</div>
+  </div>
+
+  <div class="year">
+    <h3>2025 组 <span class="tag">浮盈接近</span></h3>
+    <div class="duo">
+      <div class="box">
+        <h4 class="bnb"><i class="fas fa-coins"></i> 🟡 BNB</h4>
+        <div class="row"><span class="k">收益率</span><span class="v">+31.35%</span></div>
+        <div class="row"><span class="k">浮盈</span><span class="v">+45,649</span></div>
+        <div class="row"><span class="k">达成度</span><span class="v">106.2%</span></div>
+      </div>
+      <div class="box">
+        <h4 class="btc"><i class="fas fa-bitcoin-sign"></i> 🟠 BTC</h4>
+        <div class="row"><span class="k">收益率</span><span class="v">+23.51%</span></div>
+        <div class="row"><span class="k">浮盈</span><span class="v">+45,751</span></div>
+        <div class="row"><span class="k">达成度</span><span class="v">106.4%</span></div>
+      </div>
+    </div>
+    <div class="note"><i class="fas fa-scale-balanced"></i> 浮盈几乎一样；BNB 投入更少、用时更短，收益率更高。</div>
+  </div>
+
+  <div class="year">
+    <h3>2026 组 <span class="tag">持仓中</span></h3>
+    <div class="duo">
+      <div class="box">
+        <h4 class="bnb"><i class="fas fa-coins"></i> 🟡 BNB</h4>
+        <div class="row"><span class="k">收益率</span><span class="v">+21.15%</span></div>
+        <div class="row"><span class="k">浮盈</span><span class="v">+39,237</span></div>
+        <div class="row"><span class="k">达成度</span><span class="v">91.2%</span></div>
+      </div>
+      <div class="box">
+        <h4 class="btc"><i class="fas fa-bitcoin-sign"></i> 🟠 BTC</h4>
+        <div class="row"><span class="k">收益率</span><span class="v">+17.15%</span></div>
+        <div class="row"><span class="k">浮盈</span><span class="v">+33,012</span></div>
+        <div class="row"><span class="k">达成度</span><span class="v">76.8%</span></div>
+      </div>
+    </div>
+    <div class="note"><i class="fas fa-eye"></i> 两者都持仓中；BNB 在收益率、浮盈、达成度三项均领先 BTC。</div>
+  </div>
+
+  <!-- 最终结论 -->
+  <h2><i class="fas fa-clipboard-check"></i> 最终结论</h2>
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>对比维度</th><th>胜出方</th><th>说明</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>💹 平均收益率</td><td class="bnb-col">BNB</td><td>+74.43% vs +28.60%</td></tr>
+        <tr><td>💵 平均浮盈</td><td class="bnb-col">BNB</td><td>+70,461 vs +57,470</td></tr>
+        <tr><td>🎯 平均达成度</td><td class="btc-col">BTC</td><td>112.6% vs 111.2%，差距很小</td></tr>
+        <tr><td>⚡ 投入效率</td><td class="bnb-col">BNB</td><td>投入更少、用时更短、收益更高</td></tr>
+        <tr><td>🛡️ 稳定性</td><td class="btc-col">BTC</td><td>已止盈组全部达成 100% 以上</td></tr>
+        <tr><td>📌 当前 2026 持仓</td><td class="bnb-col">BNB</td><td>达成度 91.2% vs 76.8%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="highlight-box" style="margin-top:1rem;">
+    <i class="fas fa-flag-checkered"></i>
+    🟡 <strong>BNB</strong> 历史已止盈收益率和浮盈明显强于 🟠 <strong>BTC</strong>；
+    🟠 BTC 胜在稳定，达成度略高且每年都能达标。
+    📌 当前 2026 组，🟡 <strong>BNB 也更接近止盈目标</strong>。
+  </div>
+
+  <!-- 底部 -->
+  <hr>
+  <div class="footer-note">
+    <i class="fas fa-rocket"></i>
+    <span>BNB vs BTC · 止盈实验 · 收益率 · 达成度 · 浮盈</span>
+    <i class="fas fa-code" style="margin-left: 0.3rem;"></i>
+    <span style="font-weight: 300; opacity: 0.8;"># 精简笔记</span>
+    <i class="fas fa-terminal" style="margin-left: 0.3rem;"></i>
+  </div>
+
+</div>
+</body>
+</html>
