@@ -34,7 +34,6 @@
 > 💼 如果你看完这个项目，想从“看数据”升级到“自己动手交易”（注意：纯研究用完全不需要注册，这里只给想实操的朋友）：
 >
 > - 🔗 注册链接（免翻墙）：[欧易 OKX 官方注册](https://www.okx.com/join/BTC7000) | [备用链接](https://www.okx.com/join/BTC7000)（需翻墙）
-> - 🎁 使用邀请码 **BTC7000**：可永久减免部分手续费（长期交易的话能省下不少）
 > - 🔄 6 个月以上没登录过的老账户，通过上面的链接重新登录也能激活返佣
 > - 📱 安卓手机可直接下载 App；苹果手机需要海外 Apple ID
 > - 💰 入金很方便：C2C 支持微信/支付宝/银行卡，或者让朋友通过 UID 直接给你转币——国内用户首选
@@ -70,22 +69,17 @@
 打开终端（Windows 用 CMD 或 PowerShell；macOS 用“终端”App），执行：
 
 ```bash
-pip install "pandas>=2.2" numpy requests
+pip install -r requirements.txt 
 ```
-> 📦 **为什么指定 pandas >= 2.2**：项目代码用了新版 pandas 的 `resample("ME")` 语法（旧版用 `"M"`）。脚本已做版本兼容处理，但如果你的 pandas 太老（< 2.2），仍建议升级到 2.2+ 以获得最佳兼容。
-
-装完验证一下：
-
-```bash
-python -c "import pandas, numpy, requests; print('OK', pandas.__version__)"
-```
-看到 `OK 2.x.x` 就说明环境没问题了。 ✅
-
 ---
 
 ## 🚀 五、快速上手（三步跑通）
 
 进入项目目录，然后按顺序执行以下脚本（每步都有打印输出，最后一步会生成仪表盘）。
+
+```bash
+pip run_all.py
+```
 
 完成后用浏览器打开：
 
