@@ -108,7 +108,31 @@ def save_csv(path, headers, rows):
         w.writerows(rows)
     print(f"  保存 {path}: {len(rows)} 行")
 
+def merge_and_save(path, headers, new_rows, date_idx=0):
+    """读老 CSV → 合并新数据 → 按日期去重 → 写回"""
+    old_rows = []
+    if os.path.exists(path):
+        with open(path, "r", encoding="utf-8") as f:
+            reader = csv.reader(f)
+            next(reader, None)  # 跳过表头
+            old_rows = list(reader)
 
+    # 合并：老数据 + 新数据
+    merged = {}
+    for row in old_rows:
+        if row:
+            merged[row[date_idx]] = row
+    for row in new_rows:
+        if row:
+            merged[row[date_idx]] = row   # 新数据覆盖同日期老数据
+
+    ordered = [merged[k] for k in sorted(merged.keys())]
+
+    with open(path, "w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f)
+        w.writerow(headers)
+        w.writerows(ordered)
+    print(f"  合并保存 {path}: 共 {len(ordered)} 行（老 {len(old_rows)} + 新 {len(new_rows)}）")
 def main():
     print("=== 1. 历史日K ===")
     start_ms = 1577836800000  # 2020-01-01 UTC
@@ -124,13 +148,31 @@ def main():
                  ["date", "open", "high", "low", "close", "vol"], out)
 
     # --- Binance：BNB（OKX 无 2020-2022 数据）---
-    rows = fetch_binance_klines("BNBUSDT", start_ms)
-    ordered = sorted(rows.items())
-    out = [[time.strftime("%Y-%m-%d", time.gmtime(ts/1000)),
-            r[1], r[2], r[3], r[4], r[5]] for ts, r in ordered]
-    save_csv(os.path.join(DATA, "okx_BNB_USDT_day.csv"),
-             ["date", "open", "high", "low", "close", "vol"], out)
+        # --- Binance：BNB（OKX 无 2020-2022 数据）---
+    bnb_path = os.path.join(DATA, "okx_BNB_USDT_day.csv")
 
+    # 先看本地 CSV 最早到哪一天，决定从哪天开始抓增量
+    local_start_ms = start_ms
+    if os.path.exists(bnb_path):
+        with open(bnb_path, "r", encoding="utf-8") as f:
+            reader = csv.reader(f)
+            next(reader, None)
+            dates = [r[0] for r in reader if r]
+        if dates:
+            oldest = min(dates)
+            print(f"  本地 BNB 最早日期: {oldest}")
+            # 从本地最早日期的前一天开始抓，保证衔接不断
+            local_start_ms = int(time.mktime(time.strptime(oldest, "%Y-%m-%d"))) * 1000 - 86400000
+
+    try:
+        rows = fetch_binance_klines("BNBUSDT", local_start_ms)
+        ordered = sorted(rows.items())
+        out = [[time.strftime("%Y-%m-%d", time.gmtime(ts/1000)),
+                r[1], r[2], r[3], r[4], r[5]] for ts, r in ordered]
+        merge_and_save(bnb_path,
+                       ["date", "open", "high", "low", "close", "vol"], out)
+    except Exception as e:
+        print(f"  [警告] BNB 抓取失败，保留本地老数据：{e}")
     print("\n=== 2. 恐惧贪婪指数 FGI 全量 ===")
     fng = get_json("https://api.alternative.me/fng/?limit=0")
     fng_rows = [[d["timestamp"], d["value"], d.get("value_classification", "")] for d in fng["data"]]
