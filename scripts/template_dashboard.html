@@ -193,6 +193,115 @@ footer{margin-top:30px;text-align:center;color:var(--txt3);font-size:11px;line-h
 #particles-canvas{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none;display:block}
 body{background:#0a0e17}
 .layout{position:relative;z-index:1}
+/* ===== 止盈实验 · 底部总汇总区 ===== */
+/* ===== 止盈实验 · 底部总汇总区 ===== */
+.tp-sum-all{
+  margin-top:26px;padding:18px 20px;border-radius:12px;
+  background:linear-gradient(160deg,rgba(247,147,26,.08),rgba(98,126,234,.04));
+  border:1px solid rgba(247,147,26,.28);
+}
+.tp-sum-all h2{
+  font-size:15px;font-weight:800;color:var(--orange);
+  margin-bottom:4px;letter-spacing:.4px;
+}
+.tp-sum-all .sub{
+  font-size:11.5px;color:var(--txt3);margin-bottom:16px;line-height:1.7;
+}
+
+/* 小卡片区头部 + 左右按钮 */
+.sum-cards-head{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:10px;
+}
+.sum-cards-head span{font-size:12px;color:var(--txt3);font-weight:600;letter-spacing:.4px}
+.sum-nav{display:flex;gap:6px}
+.sum-nav button{
+  width:28px;height:28px;border-radius:7px;cursor:pointer;
+  background:rgba(13,20,38,.8);border:1px solid var(--line);
+  color:var(--txt2);font-size:15px;line-height:1;transition:.18s;
+}
+.sum-nav button:hover{background:rgba(247,147,26,.15);color:var(--orange);border-color:rgba(247,147,26,.4)}
+
+/* 小卡片区：横向滚动 */
+.sum-cards{
+  display:flex;gap:12px;
+  overflow-x:auto;overflow-y:hidden;
+  padding-bottom:10px;
+  scroll-snap-type:x proximity;
+  -webkit-overflow-scrolling:touch;
+}
+.sum-cards::-webkit-scrollbar{height:8px}
+.sum-cards::-webkit-scrollbar-thumb{background:#22304f;border-radius:4px}
+.sum-cards::-webkit-scrollbar-track{background:transparent}
+
+.sum-card{
+  flex:0 0 240px;
+  scroll-snap-align:start;
+  background:rgba(13,20,38,.7);border:1px solid var(--line);
+  border-radius:10px;padding:12px 14px;
+}
+.sum-card.win{border-color:rgba(46,189,133,.4)}
+.sum-card.hold{border-color:rgba(143,160,189,.3)}
+.sum-card .year{
+  font-size:14px;font-weight:800;margin-bottom:8px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.sum-card .year .st{
+  font-size:9.5px;padding:2px 7px;border-radius:4px;font-weight:700;
+}
+.st.green{background:rgba(46,189,133,.15);color:var(--green)}
+.st.gray{background:rgba(143,160,189,.12);color:var(--txt2)}
+.sum-row{
+  display:flex;justify-content:space-between;font-size:12px;
+  padding:4px 0;border-bottom:1px dashed rgba(29,41,69,.5);
+}
+.sum-row:last-child{border:none}
+.sum-row .k{color:var(--txt3)}
+.sum-row .v{font-weight:700;font-variant-numeric:tabular-nums}
+
+/* 汇总表头 + 下载按钮 */
+.sum-table-head{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:18px;margin-bottom:8px;flex-wrap:wrap;gap:8px;
+}
+.sum-table-head span{font-size:12px;color:var(--txt3);font-weight:600;letter-spacing:.4px}
+.sum-btn-group{display:flex;gap:8px}
+.btn-download{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 14px;border-radius:8px;cursor:pointer;
+  font-size:12px;font-weight:700;transition:.2s;border:1px solid;
+}
+.btn-download.green{
+  background:linear-gradient(135deg,rgba(46,189,133,.2),rgba(46,189,133,.08));
+  border-color:rgba(46,189,133,.5);color:var(--green);
+}
+.btn-download.green:hover{background:rgba(46,189,133,.3);transform:translateY(-1px)}
+.btn-download.orange{
+  background:linear-gradient(135deg,rgba(247,147,26,.2),rgba(247,147,26,.08));
+  border-color:rgba(247,147,26,.5);color:var(--orange);
+}
+.btn-download.orange:hover{background:rgba(247,147,26,.3);transform:translateY(-1px)}
+.btn-download:disabled{opacity:.5;cursor:wait;transform:none}
+
+/* 总表格：全字段，可横向滚动 */
+.sum-table-wrap{
+  overflow-x:auto;
+  border:1px solid var(--line);border-radius:10px;
+}
+.sum-table{
+  width:100%;border-collapse:collapse;font-size:12px;min-width:880px;
+}
+.sum-table th{
+  color:#00ff88;font-weight:600;text-align:left;padding:9px 10px;
+  border-bottom:1px solid rgba(0,255,136,.15);font-size:11px;
+  white-space:nowrap;background:rgba(13,20,38,.6);
+}
+.sum-table td{
+  padding:9px 10px;border-bottom:1px solid rgba(29,41,69,.55);
+  font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+.sum-table tbody tr:last-child td{border-bottom:none}
+.sum-table tbody tr:hover{background:rgba(98,126,234,.07)}
 </style>
 </head>
 <body>
@@ -515,39 +624,42 @@ body{background:#0a0e17}
 </section>
 
 
-       <!-- ================= 页面7：止盈实验 ================= -->
-    <section id="page-tp" class="page hidden">
-      <div class="section-title">止盈实验：每年目标 +4 万，触发即全卖</div>
-      <div class="sub">只有一组在跑：从起始年 1 月 1 日起，<b>每个交易日投入 700 USDT</b> 买 BTC；当年浮盈目标 <b>4 万 USDT</b>，如果自然年内没触发，次年目标升到 <b>8 万</b>，再下一年 <b>12 万</b>，每年 +4 万，直到触发。触发当天全部卖出，实验结束；<b>下一组从次年 1 月 1 日重新开始</b>。若到 2026-09-28 仍未触发，则保留持仓并显示当前浮盈。</div>
-            
+   <!-- ================= 页面7：止盈实验 ================= -->
+<section id="page-tp" class="page hidden">
+  <div class="section-title">止盈实验：每年目标 +4 万，触发即全卖</div>
+  <div class="sub">只有一组在跑：从起始年 1 月 1 日起，<b>每个交易日投入 700 USDT</b> 买 BTC；当年浮盈目标 <b>4 万 USDT</b>，如果自然年内没触发，次年目标升到 <b>8 万</b>，再下一年 <b>12 万</b>，每年 +4 万，直到触发。触发当天全部卖出，实验结束；<b>下一组从次年 1 月 1 日重新开始</b>。若到 2026-09-28 仍未触发，则保留持仓并显示当前浮盈。</div>
 
-            <div class="card" style="margin-bottom:14px">
-        <h3>参数设置 <span class="tag">可调</span></h3>
-        <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end">
-          <div style="flex:1;min-width:140px">
-            <label style="font-size:11.5px;color:var(--txt2);display:block;margin-bottom:4px">币种</label>
-            <select id="tp-coin" onchange="runTP()" style="width:100%;background:#0e1526;border:1px solid var(--line);color:var(--txt);border-radius:6px;padding:7px 9px">
-            </select>
-          </div>
-          <div style="flex:1;min-width:180px">
-            <label style="font-size:11.5px;color:var(--txt2);display:block;margin-bottom:4px">每日定投（USDT）</label>
-            <input id="tp-daily" type="number" value="700" min="1" step="100"
-              style="width:100%;background:#0e1526;border:1px solid var(--line);color:var(--txt);border-radius:6px;padding:7px 9px">
-          </div>
-          <div style="flex:1;min-width:180px">
-            <label style="font-size:11.5px;color:var(--txt2);display:block;margin-bottom:4px">首年目标浮盈（USDT）</label>
-            <input id="tp-target" type="number" value="40000" min="1" step="1000"
-              style="width:100%;background:#0e1526;border:1px solid var(--line);color:var(--txt);border-radius:6px;padding:7px 9px">
-          </div>
-          <button class="btn primary" style="height:36px" onclick="runTP()">↻ 重新计算</button>
-        </div>
-        <div style="font-size:11px;color:var(--txt3);margin-top:8px;line-height:1.7">
-          目标浮盈每年 +（首年目标），例如首年 4 万 → 第 2 年 8 万 → 第 3 年 12 万…… 触发即全部卖出，下一组从次年 1 月 1 日重新开始。
-        </div>
+  <div class="card" style="margin-bottom:14px">
+    <h3>参数设置 <span class="tag">可调</span></h3>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end">
+      <div style="flex:1;min-width:140px">
+        <label style="font-size:11.5px;color:var(--txt2);display:block;margin-bottom:4px">币种</label>
+        <select id="tp-coin" onchange="runTP()" style="width:100%;background:#0e1526;border:1px solid var(--line);color:var(--txt);border-radius:6px;padding:7px 9px">
+        </select>
       </div>
+      <div style="flex:1;min-width:180px">
+        <label style="font-size:11.5px;color:var(--txt2);display:block;margin-bottom:4px">每日定投（USDT）</label>
+        <input id="tp-daily" type="number" value="700" min="1" step="100"
+          style="width:100%;background:#0e1526;border:1px solid var(--line);color:var(--txt);border-radius:6px;padding:7px 9px">
+      </div>
+      <div style="flex:1;min-width:180px">
+        <label style="font-size:11.5px;color:var(--txt2);display:block;margin-bottom:4px">首年目标浮盈（USDT）</label>
+        <input id="tp-target" type="number" value="40000" min="1" step="1000"
+          style="width:100%;background:#0e1526;border:1px solid var(--line);color:var(--txt);border-radius:6px;padding:7px 9px">
+      </div>
+      <button class="btn primary" style="height:36px" onclick="runTP()">↻ 重新计算</button>
+    </div>
+    <div style="font-size:11px;color:var(--txt3);margin-top:8px;line-height:1.7">
+      目标浮盈每年 +（首年目标），例如首年 4 万 → 第 2 年 8 万 → 第 3 年 12 万…… 触发即全部卖出，下一组从次年 1 月 1 日重新开始。
+    </div>
+  </div>
 
-      <div class="grid g2" id="tp-grid"></div>
-    </section>
+  <!-- 图表区 -->
+  <div class="grid g2" id="tp-grid"></div>
+
+  <!-- 底部总汇总区 -->
+  <div id="tp-sum-all" class="tp-sum-all"></div>
+</section>
     <!-- ===== 底部 CTA ===== -->
     <div class="cta-area">
       <div class="cta-title">喜欢这个项目？关注「小白书量化」</div>
@@ -586,6 +698,7 @@ body{background:#0a0e17}
 </div>
 
 <script src="echarts.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script id="embedded-data" type="application/json">__DATA_JSON__</script>
 <script>
 "use strict";
@@ -1791,7 +1904,6 @@ function runTP(){
   var sel = document.getElementById("tp-coin");
   if(sel && sel.options.length === 0){
     var coins = (D.coins && Object.keys(D.coins)) || ["BTC"];
-    // 只显示有数据的币
     coins = coins.filter(function(c){ return D.coins[c] && D.coins[c].length; });
     if(!coins.length) coins = ["BTC"];
     coins.forEach(function(c){
@@ -1839,13 +1951,11 @@ function runTP(){
       var d = kk[j][0], px = +kk[j][4];
       var y = +d.slice(0,4);
 
-      // 自然年升档（停投不停目标）
       if(y !== curYear){
         curYear = y;
         target = STEP * (y - nextStartYear + 1);
       }
 
-      // ★ 只投起始年这一年：起始年 1 月 1 日 ~ 12 月 31 日
       var withinFirstYear = (y === nextStartYear);
       if(withinFirstYear){
         cash += DAILY;
@@ -1856,7 +1966,6 @@ function runTP(){
       var pnl = mkt - cash;
       rows.push({date:d, px:px, cash:cash, mkt:mkt, pnl:pnl, target:target, investing:withinFirstYear});
 
-      // 触发就卖
       if(pnl >= target){
         sold = {date:d, px:px, pnl:pnl, target:target, cash:cash, btc:btc, mkt:mkt};
         break;
@@ -1886,24 +1995,15 @@ function runTP(){
     }
   }
 
-  // 4. 渲染每张卡片
+  // 4. 渲染图表卡片（每张只有图）
   groups.forEach(function(g, gi){
     var card = document.createElement("div");
     card.className = "card";
     var tagCls = g.sold ? "green" : "gray";
     card.innerHTML =
       '<h3>'+coin+' · '+g.year+' 组 · 起始 '+g.rows[0].date+' <span class="tag '+tagCls+'">'+g.status+'</span></h3>'
-      + '<div class="ind-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:10px">'
-      +   '<div class="ind"><div class="k">累计投入</div><div class="v">'+fmt(g.endCash,0)+'</div></div>'
-      +   '<div class="ind"><div class="k">持有'+coin+'</div><div class="v">'+g.endBtc.toFixed(4)+'</div></div>'
-      +   '<div class="ind"><div class="k">'+ (g.sold?'卖出日':'最新日') +'</div><div class="v" style="font-size:12px">'+g.endDate+'</div></div>'
-      +   '<div class="ind"><div class="k">浮盈 / 目标</div><div class="v '+g.pnlCls+'">'+(g.endPnl>=0?'+':'')+fmt(g.endPnl,0)+' / '+(g.endTarget % 10000 === 0 ? (g.endTarget/10000)+'万' : (g.endTarget/10000).toFixed(1)+'万')+'</div></div>'
-      + '</div>'
-      + '<div id="tp-chart-'+gi+'" class="chart" style="height:300px"></div>'
-      + '<div style="font-size:10.5px;color:var(--txt3);margin-top:6px;line-height:1.7">'
-      + '左轴：累计投入 / 账户市值（USDT） ｜ 右轴：浮盈 / 当年目标（USDT）'
-      + '</div>';
-      grid.appendChild(card);
+      + '<div id="tp-chart-'+gi+'" class="chart" style="height:300px"></div>';
+    grid.appendChild(card);
 
     setTimeout(function(){
       var c = echarts.init(document.getElementById("tp-chart-"+gi));
@@ -1948,9 +2048,163 @@ function runTP(){
       });
     }, 60);
   });
+
+  // ===== 5. 底部总汇总：小卡片（横向滚动）+ 总表格（可下载） =====
+  var sumWrap = document.getElementById("tp-sum-all");
+  if(!sumWrap){
+    sumWrap = document.createElement("div");
+    sumWrap.id = "tp-sum-all";
+    sumWrap.className = "tp-sum-all";
+    document.getElementById("page-tp").appendChild(sumWrap);
+  }
+
+  var sumCardsHtml = '<div class="sum-cards" id="sum-cards">';
+  var sumRowsHtml = "";
+  groups.forEach(function(g){
+    var targetWan = (g.endTarget / 10000);
+    var targetTxt = (g.endTarget % 10000 === 0) ? (targetWan + ' 万') : (targetWan.toFixed(1) + ' 万');
+    var pnlSign = g.endPnl >= 0 ? '+' : '';
+    var hitPct = g.endTarget > 0 ? (g.endPnl / g.endTarget * 100) : 0;
+    var cardCls = g.sold ? "win" : "hold";
+    var stCls = g.sold ? "green" : "gray";
+
+    // 小卡片
+    sumCardsHtml +=
+      '<div class="sum-card '+cardCls+'">'
+      + '<div class="year">'+g.year+' 组 <span class="st '+stCls+'">'+g.status+'</span></div>'
+      + '<div class="sum-row"><span class="k">'+(g.sold?'卖出时间':'最新日期')+'</span><span class="v">'+g.endDate+'</span></div>'
+      + '<div class="sum-row"><span class="k">投入天数</span><span class="v">'+g.rows.length+' 天</span></div>'
+      + '<div class="sum-row"><span class="k">累计投入</span><span class="v">'+fmt(g.endCash,0)+'</span></div>'
+      + '<div class="sum-row"><span class="k">'+(g.sold?'卖出浮盈':'当前浮盈')+'</span><span class="v '+g.pnlCls+'">'+pnlSign+fmt(g.endPnl,0)+'</span></div>'
+      + '<div class="sum-row"><span class="k">收益率</span><span class="v '+g.pnlCls+'">'+fmtPct(g.pnlPct)+'</span></div>'
+      + '<div class="sum-row"><span class="k">目标 / 达成</span><span class="v" style="color:var(--yellow)">'+targetTxt+' / '+hitPct.toFixed(0)+'%</span></div>'
+      + '</div>';
+
+    // 表格行
+    sumRowsHtml +=
+      '<tr>'
+      + '<td>'+g.year+' 组</td>'
+      + '<td><span class="tag '+stCls+'">'+g.status+'</span></td>'
+      + '<td>'+(g.sold?'卖出':'最新')+' '+g.endDate+'</td>'
+      + '<td>'+g.rows.length+'</td>'
+      + '<td>'+fmt(g.endCash,0)+'</td>'
+      + '<td>'+g.endBtc.toFixed(4)+'</td>'
+      + '<td class="'+g.pnlCls+'">'+pnlSign+fmt(g.endPnl,0)+'</td>'
+      + '<td class="'+g.pnlCls+'">'+fmtPct(g.pnlPct)+'</td>'
+      + '<td style="color:var(--yellow)">'+targetTxt+'</td>'
+      + '<td style="color:'+(hitPct>=100?'var(--red)':'var(--txt2)')+'">'+hitPct.toFixed(1)+'%</td>'
+      + '</tr>';
+  });
+  sumCardsHtml += '</div>';
+
+  sumWrap.innerHTML =
+    '<h2>📊 各年份总结</h2>'
+    + '<div class="sub">所有止盈组的关键指标集中汇总，方便横向对比。</div>'
+    + '<div class="sum-cards-head"><span>各年份卡片</span>'
+    +   '<div class="sum-nav">'
+    +     '<button onclick="scrollSumCards(-1)">‹</button>'
+    +     '<button onclick="scrollSumCards(1)">›</button>'
+    +   '</div></div>'
+    + sumCardsHtml
+    + '<div class="sum-table-head">'
+    +   '<span>全字段汇总表</span>'
+    +   '<div class="sum-btn-group">'
+    +     '<button class="btn-download green" onclick="downloadSumTable()">⬇ 下载图片</button>'
+    +     '<button class="btn-download orange" onclick="downloadSumCSV()">⬇ 下载 CSV/Excel</button>'
+    +   '</div>'
+    + '</div>'
+    + '<div class="sum-table-wrap"><table class="sum-table">'
+    +   '<thead><tr>'
+    +     '<th>组别</th><th>状态</th><th>卖出/最新时间</th><th>投入天数</th>'
+    +     '<th>累计投入(USDT)</th><th>持有'+coin+'</th><th>浮盈(USDT)</th><th>收益率</th>'
+    +     '<th>目标</th><th>达成度</th>'
+    +   '</tr></thead>'
+    +   '<tbody>'+sumRowsHtml+'</tbody>'
+    + '</table></div>';
+    // ★ 默认把小卡片横向滚动条停在最右（显示最新年份）
+  setTimeout(function(){
+    var sc = document.getElementById("sum-cards");
+    if(sc) sc.scrollLeft = sc.scrollWidth;
+  }, 150);
 }
 
-/* ============ 页面渲染调度 ============ */
+/* ===== 小卡片横向滚动按钮 ===== */
+function scrollSumCards(dir){
+  var el = document.getElementById("sum-cards");
+  if(!el) return;
+  el.scrollBy({left: dir * 260, behavior:"smooth"});
+}
+
+/* ===== 下载总表格为图片 ===== */
+function downloadSumTable(){
+  var wrap = document.querySelector(".sum-table-wrap");
+  if(!wrap){ alert("表格还没生成"); return; }
+  if(typeof html2canvas === "undefined"){
+    alert("图片库未加载，请检查 html2canvas 是否引入成功");
+    return;
+  }
+  var btn = document.querySelector(".btn-download.green");
+  if(btn){ btn.disabled = true; btn.textContent = "生成中..."; }
+
+  var oldOverflow = wrap.style.overflowX;
+  wrap.style.overflowX = "visible";
+
+  html2canvas(wrap, {
+    backgroundColor: "#0a0e17",
+    scale: 2,
+    useCORS: true,
+    logging: false
+  }).then(function(canvas){
+    wrap.style.overflowX = oldOverflow;
+    var link = document.createElement("a");
+    var coin = (document.getElementById("tp-coin") || {}).value || "BTC";
+    var ts = new Date().toISOString().slice(0,10);
+    link.download = "止盈实验汇总_" + coin + "_" + ts + ".png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+    if(btn){ btn.disabled = false; btn.textContent = "⬇ 下载图片"; }
+  }).catch(function(e){
+    wrap.style.overflowX = oldOverflow;
+    alert("生成失败：" + e.message);
+    if(btn){ btn.disabled = false; btn.textContent = "⬇ 下载图片"; }
+  });
+}
+
+/* ===== 下载总表格为 CSV（Excel 可打开） ===== */
+function downloadSumCSV(){
+  var table = document.querySelector(".sum-table");
+  if(!table){ alert("表格还没生成"); return; }
+
+  var rows = [];
+  var heads = [];
+  table.querySelectorAll("thead th").forEach(function(th){
+    heads.push('"' + th.innerText.trim().replace(/"/g,'""') + '"');
+  });
+  rows.push(heads.join(","));
+
+  table.querySelectorAll("tbody tr").forEach(function(tr){
+    var cells = [];
+    tr.querySelectorAll("td").forEach(function(td){
+      var txt = td.innerText.trim().replace(/"/g,'""');
+      cells.push('"' + txt + '"');
+    });
+    rows.push(cells.join(","));
+  });
+
+  var csv = "\uFEFF" + rows.join("\r\n");
+  var blob = new Blob([csv], {type:"text/csv;charset=utf-8;"});
+
+  var coin = (document.getElementById("tp-coin") || {}).value || "BTC";
+  var ts = new Date().toISOString().slice(0,10);
+  var link = document.createElement("a");
+  link.download = "止盈实验汇总_" + coin + "_" + ts + ".csv";
+  link.href = URL.createObjectURL(blob);
+  link.click();
+  setTimeout(function(){ URL.revokeObjectURL(link.href); }, 1000);
+}
+
+
+  /* ============ 页面渲染调度 ============ */
 function renderPage(pg){
   if(pg==="monitor"){ applyLive(); fillSignal(); fillTickerTable(); chartKline(); chartIndicators(); chartFunding(); chartStablecoin(); chartFng90(); }
   else if(pg==="factors"){ chartYearlyIC(); chartRollIC(); renderIcCheck(); chartExtremes(); chartFngGroups(); chartVol(); fillFundCrowd(); chartFundCrowd(); chartScatter(); renderScatterTable(); fillBuyCases();
