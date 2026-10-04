@@ -2000,8 +2000,14 @@ function runTP(){
     var card = document.createElement("div");
     card.className = "card";
     var tagCls = g.sold ? "green" : "gray";
-    card.innerHTML =
+        card.innerHTML =
       '<h3>'+coin+' · '+g.year+' 组 · 起始 '+g.rows[0].date+' <span class="tag '+tagCls+'">'+g.status+'</span></h3>'
+      + '<div class="ind-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:10px">'
+      +   '<div class="ind"><div class="k">累计投入</div><div class="v">'+fmt(g.endCash,0)+'</div></div>'
+      +   '<div class="ind"><div class="k">持有'+coin+'</div><div class="v">'+g.endBtc.toFixed(4)+'</div></div>'
+      +   '<div class="ind"><div class="k">'+ (g.sold?'卖出日':'最新日') +'</div><div class="v" style="font-size:12px">'+g.endDate+'</div></div>'
+      +   '<div class="ind"><div class="k">浮盈 / 目标</div><div class="v '+g.pnlCls+'">'+(g.endPnl>=0?'+':'')+fmt(g.endPnl,0)+' / '+(g.endTarget % 10000 === 0 ? (g.endTarget/10000)+'万' : (g.endTarget/10000).toFixed(1)+'万')+'</div></div>'
+      + '</div>'
       + '<div id="tp-chart-'+gi+'" class="chart" style="height:300px"></div>';
     grid.appendChild(card);
 
