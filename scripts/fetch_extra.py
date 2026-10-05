@@ -54,7 +54,7 @@ def save_csv(path, headers, rows):
 def main():
     # 1. 新币日K（2023-01-01 起）。BTC/ETH 已有全量主文件（2020起），跳过避免覆盖
     start_ms = 1672531200000  # 2023-01-01
-    insts = ["SOL-USDT", "BNB-USDT", "XRP-USDT", "DOGE-USDT", "ADA-USDT"]
+    insts = ["SOL-USDT", "XRP-USDT", "DOGE-USDT", "ADA-USDT"]
     print("=== 1. 新币日K (2023起) ===")
     for inst in insts:
         rows = fetch_okx_klines(inst, start_ms)

@@ -167,10 +167,12 @@ def main():
                 int(time.mktime(time.strptime(oldest, "%Y-%m-%d"))) * 1000 - 86400000
             )
     try:
-        rows = fetch_binance_klines("BNBUSDT", local_start_ms)
+        # 改用 OKX 抓 BNB-USDT，避开币安的 451 限制
+        rows = fetch_okx_klines("BNB-USDT", local_start_ms)
         ordered = sorted(rows.items())
         out = [[time.strftime("%Y-%m-%d", time.gmtime(ts/1000)),
-                r[1], r[2], r[3], r[4], r[5]] for ts, r in ordered]
+                float(r[1]), float(r[2]), float(r[3]), float(r[4]), float(r[5])]
+               for ts, r in ordered]
         merge_and_save(bnb_path,
                        ["date", "open", "high", "low", "close", "vol"], out)
     except Exception as e:
