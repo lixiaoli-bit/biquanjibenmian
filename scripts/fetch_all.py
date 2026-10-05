@@ -148,9 +148,10 @@ def main():
                  ["date", "open", "high", "low", "close", "vol"], out)
 
     # --- Binance：BNB（OKX 无 2020-2022 数据）---
-        bnb_path = os.path.join(DATA, "okx_BNB_USDT_day.csv")
+        # --- Binance：BNB（OKX 无 2020-2022 数据）---
+    bnb_path = os.path.join(DATA, "okx_BNB_USDT_day.csv")
 
-    # 固定从 2020-01-01 开始抓，避免本地 CSV 被污染后起点漂移
+    # 先看本地 CSV 最早到哪一天，决定从哪天开始抓增量
     local_start_ms = start_ms
     if os.path.exists(bnb_path):
         with open(bnb_path, "r", encoding="utf-8") as f:
@@ -160,11 +161,9 @@ def main():
         if dates:
             oldest = min(dates)
             print(f"  本地 BNB 最早日期: {oldest}")
-            # 只有本地数据比 2020 年更早时才用它，否则坚持从 2020 年抓
-            local_start_ms = min(
-                start_ms,
-                int(time.mktime(time.strptime(oldest, "%Y-%m-%d"))) * 1000 - 86400000
-            )
+            # 从本地最早日期的前一天开始抓，保证衔接不断
+            local_start_ms = int(time.mktime(time.strptime(oldest, "%Y-%m-%d"))) * 1000 - 86400000
+
     try:
         rows = fetch_binance_klines("BNBUSDT", local_start_ms)
         ordered = sorted(rows.items())
